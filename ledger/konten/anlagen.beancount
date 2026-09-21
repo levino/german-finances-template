@@ -1,0 +1,16 @@
+; Anlagegüter. Über 800 € netto wird abgeschrieben, darunter ist es ein
+; geringwertiges Wirtschaftsgut und sofort Aufwand.
+;
+; Der Plugin-Eintrag erzeugt die monatlichen Teilbeträge selbst, bis heute.
+
+2025-01-15 * "Büromöbel Muster" "Schreibtisch und Stuhl, Abschreibungsplan über 13 Jahre"
+  document: "belege/2025/2025-01-15.bueromoebel-muster-schreibtisch.pdf"
+  amortize_months: 156
+  Expenses:Betrieb:Abschreibung        1560.00 EUR
+  Assets:Anlagen:Bueroeinrichtung:AfA -1560.00 EUR
+
+2025-01-15 * "Büromöbel Muster" "Anschaffung"
+  document: "belege/2025/2025-01-15.bueromoebel-muster-schreibtisch.pdf"
+  Assets:Anlagen:Bueroeinrichtung    1560.00 EUR
+  Expenses:Betrieb:Vorsteuer          296.40 EUR
+  Assets:Bank:Geschaeftskonto:Giro  -1856.40 EUR

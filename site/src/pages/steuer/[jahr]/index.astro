@@ -1,0 +1,62 @@
+---
+import Basis from '../../../layouts/Basis.astro';
+import { jahre, erklaerung, formulareVon, offeneAufgaben } from '../../../lib/daten';
+
+export function getStaticPaths() {
+  return Object.keys(erklaerung).map((jahr) => ({ params: { jahr } }));
+}
+
+const jahr = Astro.params.jahr!;
+const daten = erklaerung[jahr]!;
+const formulare = formulareVon(jahr);
+const aufgaben = offeneAufgaben(jahr);
+const anteil = daten.felder_gesamt > 0
+  ? Math.round((daten.belegt / daten.felder_gesamt) * 100) : 0;
+---
+
+<Basis titel={`Steuererklärung ${jahr}`} untertitel="Formular für Formular, Feld für Feld.">
+  <p class="krumen" slot="krumen">
+    <a href="/">Übersicht</a> · <a href="/steuer/">Steuer</a> · {jahr}
+  </p>
+
+  <p class="fortschritt">
+    <strong>{daten.belegt}</strong> von {daten.felder_gesamt} Feldern belegt
+    <span class="balken"><span style={`width:${anteil}%`}></span></span>
+  </p>
+
+  <div class="tabellenrahmen">
+    <table>
+      <thead>
+        <tr><th>Formular</th><th class="zahl">Felder</th><th class="zahl">offen</th></tr>
+      </thead>
+      <tbody>
+        {formulare.map((f) => (
+          <tr>
+            <td><a href={`/steuer/${jahr}/${f.id}/`}>{f.titel}</a></td>
+            <td class="zahl">{f.felder_gesamt}</td>
+            <td class="zahl">{f.offen || '—'}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+
+  {aufgaben.length > 0 && (
+    <section class="aufgaben">
+      <h2>Offene Aufgaben</h2>
+      <ul>{aufgaben.map((a) => <li>{a}</li>)}</ul>
+    </section>
+  )}
+</Basis>
+
+<style>
+  .fortschritt { display: flex; align-items: center; gap: 0.8rem; margin: 0 0 1rem; }
+  .fortschritt strong { font-size: 1.3rem; }
+  .balken { flex: 1 1 auto; max-width: 20rem; height: 6px; border-radius: 3px;
+    background: var(--flaeche-2); overflow: hidden; }
+  .balken > span { display: block; height: 100%; background: var(--gruen); }
+  .aufgaben { margin-top: 2rem; }
+  .aufgaben h2 { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em;
+    color: var(--text-sehr-leise); }
+  .aufgaben ul { padding-left: 1.1rem; font-size: 0.9rem; }
+</style>

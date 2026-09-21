@@ -1,0 +1,55 @@
+---
+import Basis from '../../layouts/Basis.astro';
+import { jahre, belegeVon, belege, formatDatum } from '../../lib/daten';
+
+const mitBelegen = jahre.filter((j) => belegeVon(j).length > 0);
+---
+
+<Basis titel="Belege" untertitel="Was vorliegt, nach Jahr. Ein Klick öffnet das Dokument.">
+  <p class="krumen" slot="krumen"><a href="/">Übersicht</a> · Belege</p>
+
+  {belege.tote_verweise.length > 0 && (
+    <p class="warnung">
+      {belege.tote_verweise.length} Verweis(e) zeigen auf Dateien, die es nicht gibt.
+    </p>
+  )}
+
+  {mitBelegen.map((jahr) => (
+    <section id={jahr}>
+      <h2>{jahr} <span class="anzahl">{belegeVon(jahr).length}</span></h2>
+      <div class="tabellenrahmen">
+        <table>
+          <thead>
+            <tr><th>Belegdatum</th><th>Beleg</th><th>Buchungen</th></tr>
+          </thead>
+          <tbody>
+            {belegeVon(jahr).map((b) => (
+              <tr>
+                <td>{formatDatum(b.datum)}</td>
+                <td>
+                  <a href={`/${b.pfad}`}>{b.bezeichnung}</a>
+                  {b.ausgangsrechnung && <span class="marke">Ausgangsrechnung</span>}
+                </td>
+                <td class="buchungen">
+                  {b.buchungen.length === 0
+                    ? <span class="ampel nicht-erklaeren">keine</span>
+                    : b.buchungen.map((x) => `${formatDatum(x.datum)} ${x.payee}`).join(' · ')}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  ))}
+</Basis>
+
+<style>
+  section { margin-top: 2rem; }
+  h2 { font-size: 1.1rem; margin-bottom: 0.5rem; }
+  .anzahl { font-size: 0.75rem; color: var(--text-sehr-leise); font-weight: 400; }
+  .marke { margin-left: 0.5rem; font-size: 0.7rem; text-transform: uppercase;
+    letter-spacing: 0.05em; color: var(--text-sehr-leise); }
+  .buchungen { font-size: 0.8rem; color: var(--text-leise); }
+  .warnung { color: var(--rot); font-size: 0.9rem; }
+</style>

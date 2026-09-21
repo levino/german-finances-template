@@ -1,0 +1,8 @@
+.git
+.venv
+**/node_modules
+**/__pycache__
+**/*.pyc
+site/dist
+site/.astro
+.claude

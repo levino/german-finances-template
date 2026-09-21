@@ -1,0 +1,14 @@
+; Depot. Kapitalerträge brutto, einbehaltene Steuer auf eigene Konten — sonst
+; lässt sich Zeile 7 der Anlage KAP nicht füllen, die den Bruttoertrag laut
+; Steuerbescheinigung verlangt.
+
+2025-05-22 * "Musterbroker" "Dividende Beispiel AG"
+  document: "belege/2025/2026-03-05.steuerbescheinigung-musterbroker-2025.pdf"
+  Assets:Depot:Musterbroker:Cash          73.63 EUR
+  Expenses:Steuern:Kapitalertragsteuer    25.00 EUR
+  Expenses:Steuern:Solidaritaetszuschlag   1.37 EUR
+  Income:Kapitalertraege                -100.00 EUR
+
+; Der Stand liegt 5,28 EUR unter der Summe der Buchungen dieses Jahres: die
+; Korrektur des Anfangsbestands in korrekturen.beancount.
+2025-12-31 balance Assets:Depot:Musterbroker:Cash   68.35 EUR

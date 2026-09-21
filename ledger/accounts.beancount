@@ -1,0 +1,34 @@
+; Kontenrahmen. Deutsche Namen unter englischen Wurzeln — Beancount verlangt
+; die fünf Wurzeltypen, alles darunter ist frei.
+
+2024-01-01 open Assets:Bank:Beispielbank:Giro            EUR
+2024-01-01 open Assets:Bank:Geschaeftskonto:Giro         EUR
+2024-01-01 open Assets:Depot:Musterbroker:Cash           EUR
+2024-01-01 open Assets:Depot:Musterbroker:Wertpapiere
+2024-01-01 open Assets:Anlagen:Bueroeinrichtung          EUR
+2024-01-01 open Assets:Anlagen:Bueroeinrichtung:AfA      EUR
+
+2024-01-01 open Income:Betrieb:Honorare                  EUR
+2024-01-01 open Income:Betrieb:Umsatzsteuererstattung    EUR
+2024-01-01 open Income:Kapitalertraege                   EUR
+
+; Betrieb: netto buchen, Vorsteuer getrennt — bei Regelbesteuerung ist sie ein
+; durchlaufender Posten und gehört nicht in die Kostenzeilen der EÜR.
+2024-01-01 open Expenses:Betrieb:Vorsteuer               EUR
+2024-01-01 open Expenses:Betrieb:Buchhaltung             EUR
+2024-01-01 open Expenses:Betrieb:Raumkosten              EUR
+2024-01-01 open Expenses:Betrieb:Kontofuehrung           EUR
+2024-01-01 open Expenses:Betrieb:Abschreibung            EUR
+2024-01-01 open Expenses:Tech:Hosting                    EUR
+
+2024-01-01 open Expenses:Spenden                         EUR
+2024-01-01 open Expenses:Parteibeitraege                 EUR
+2024-01-01 open Expenses:Versicherungen:Kranken          EUR
+2024-01-01 open Expenses:Versicherungen:Haftpflicht      EUR
+2024-01-01 open Expenses:Kinder:Schulgeld                EUR
+2024-01-01 open Expenses:Haushaltsnah:Handwerker         EUR
+2024-01-01 open Expenses:Steuern:Kapitalertragsteuer     EUR
+2024-01-01 open Expenses:Steuern:Solidaritaetszuschlag   EUR
+2024-01-01 open Expenses:Sonstiges                       EUR
+
+2024-01-01 open Equity:Anfangsbestand                    EUR

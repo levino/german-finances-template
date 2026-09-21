@@ -1,0 +1,79 @@
+:root {
+  --text: #16181d;
+  --text-leise: #5a6069;
+  --text-sehr-leise: #8b9199;
+  --flaeche: #ffffff;
+  --flaeche-2: #f4f5f7;
+  --rand: #e2e4e8;
+  --gruen: #1a7f4b;
+  --rot: #b4232a;
+  --radius: 10px;
+  --schrift: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --text: #e8eaed;
+    --text-leise: #a3aab4;
+    --text-sehr-leise: #767d87;
+    --flaeche: #1b1d22;
+    --flaeche-2: #24272e;
+    --rand: #32363e;
+    --gruen: #4cc38a;
+    --rot: #ef6f74;
+  }
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: var(--schrift);
+  color: var(--text);
+  background: var(--flaeche-2);
+  line-height: 1.5;
+}
+
+a { color: inherit; }
+
+.huelle { display: flex; min-height: 100vh; }
+
+.seitenleiste {
+  flex: 0 0 15rem;
+  padding: 1.4rem 1rem;
+  background: var(--flaeche);
+  border-right: 1px solid var(--rand);
+}
+
+.seitenleiste .marke { display: block; font-weight: 700; text-decoration: none; }
+.seitenleiste .marke span { display: block; font-size: 0.75rem; color: var(--text-sehr-leise); font-weight: 400; }
+.seitenleiste ul { list-style: none; margin: 1.2rem 0 0; padding: 0; }
+.seitenleiste li { margin: 0.1rem 0; }
+.seitenleiste a:not(.marke) {
+  display: block; padding: 0.3rem 0.5rem; border-radius: 6px;
+  text-decoration: none; font-size: 0.9rem; color: var(--text-leise);
+}
+.seitenleiste a[aria-current="page"] { background: var(--flaeche-2); color: var(--text); font-weight: 600; }
+
+.inhalt { flex: 1 1 auto; padding: 1.6rem 2rem 4rem; max-width: 62rem; }
+.inhalt h1 { margin: 0 0 0.2rem; font-size: 1.5rem; }
+.untertitel { margin: 0 0 1.2rem; color: var(--text-leise); }
+.krumen { margin: 0 0 0.8rem; font-size: 0.8rem; color: var(--text-sehr-leise); }
+
+table { width: 100%; border-collapse: collapse; font-size: 0.9rem; background: var(--flaeche); }
+th, td { padding: 0.5rem 0.7rem; text-align: left; border-bottom: 1px solid var(--rand); }
+th { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-sehr-leise); }
+tbody tr:last-child td { border-bottom: none; }
+.zahl { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.tabellenrahmen { border: 1px solid var(--rand); border-radius: var(--radius); overflow: hidden; }
+
+.ampel { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 650; }
+.ampel.belegt { color: var(--gruen); }
+.ampel.kandidat, .ampel.offen, .ampel.zu-klaeren { color: var(--rot); }
+.ampel.nicht-erklaeren { color: var(--text-sehr-leise); }
+
+@media (max-width: 45rem) {
+  .huelle { flex-direction: column; }
+  .seitenleiste { flex: none; border-right: none; border-bottom: 1px solid var(--rand); }
+  .inhalt { padding: 1.2rem 1rem 3rem; }
+}

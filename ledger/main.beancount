@@ -1,0 +1,12 @@
+option "title" "Beispiel Buchführung"
+option "operating_currency" "EUR"
+
+; Der lokale Plugin-Ordner liegt neben dieser Datei.
+option "insert_pythonpath" "True"
+plugin "plugins.amortize_over"
+
+include "accounts.beancount"
+include "konten/beispielbank-giro.beancount"
+include "konten/musterbroker.beancount"
+include "konten/anlagen.beancount"
+include "korrekturen.beancount"

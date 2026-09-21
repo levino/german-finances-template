@@ -1,0 +1,50 @@
+---
+import Basis from '../layouts/Basis.astro';
+import { jahre, erklaerung, belege, offeneAufgaben } from '../lib/daten';
+
+const offenGesamt = jahre.reduce(
+  (s, j) => s + (erklaerung[j]?.offen ?? 0) + offeneAufgaben(j).length, 0);
+
+const kacheln = [
+  {
+    titel: 'Steuer',
+    href: '/steuer/',
+    zeile: jahre.length > 1 ? `${jahre[jahre.length - 1]} bis ${jahre[0]}` : jahre[0] ?? '—',
+    fuss: offenGesamt > 0 ? `${offenGesamt} offen` : 'alles belegt',
+    warnung: offenGesamt > 0,
+  },
+  {
+    titel: 'Belege',
+    href: '/belege/',
+    zeile: `${belege.kennzahlen.dateien} Dokumente`,
+    fuss: `${belege.kennzahlen.mit_buchung} mit Buchung`,
+    warnung: belege.kennzahlen.tote_verweise > 0,
+  },
+];
+---
+
+<Basis titel="Finanzen" untertitel="Ein Ledger, eine Belegablage, eine Arbeitsmappe je Jahr.">
+  <div class="kacheln">
+    {kacheln.map((k) => (
+      <a class="kachel" href={k.href}>
+        <span class="titel">{k.titel}</span>
+        <span class="zeile">{k.zeile}</span>
+        <span class={k.warnung ? 'fuss warnung' : 'fuss'}>{k.fuss}</span>
+      </a>
+    ))}
+  </div>
+</Basis>
+
+<style>
+  .kacheln { display: grid; grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
+    gap: 1rem; margin-top: 1rem; }
+  .kachel { display: flex; flex-direction: column; gap: 0.35rem; padding: 1.1rem 1.2rem;
+    border: 1px solid var(--rand); border-radius: var(--radius);
+    background: var(--flaeche); text-decoration: none; }
+  .kachel:hover { border-color: var(--text-leise); }
+  .titel { font-size: 1.05rem; font-weight: 650; }
+  .zeile { font-size: 0.9rem; color: var(--text-leise); }
+  .fuss { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em;
+    color: var(--text-sehr-leise); }
+  .fuss.warnung { color: var(--rot); }
+</style>

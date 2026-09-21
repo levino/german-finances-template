@@ -1,0 +1,9 @@
+; Korrekturen von Hand. Diese Datei überschreibt kein Generator.
+;
+; Stimmt ein Saldo nicht und die Erklärung des betroffenen Jahres ist längst
+; abgegeben, wird nicht die Vergangenheit umgeschrieben, sondern zum
+; Jahreswechsel gegen das Kapitalkonto korrigiert — mit Begründung.
+
+2025-01-01 * "Korrektur Anfangsbestand" "Provisionen aus Devisengeschäften 2024, im Altbestand nicht vom Konto abgezogen"
+  Assets:Depot:Musterbroker:Cash  -5.28 EUR
+  Equity:Anfangsbestand            5.28 EUR

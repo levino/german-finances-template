@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<elster-uebergabe jahr="2025">
+  <formular name="Einkommensteuer">
+    <block name="Hauptvordruck">
+      <posten zeile="" feld="Art der Erklärung" wert="Einkommensteuererklärung" eintragen="ja"/>
+      <posten zeile="19" feld="Veranlagungsart" wert="Zusammenveranlagung" eintragen="ja"/>
+    </block>
+    <block name="Sonderausgaben">
+      <posten zeile="5" feld="Musterhilfe e.V." wert="250,00" eintragen="ja" gruppe="Zeile 5 — Spenden"/>
+      <posten zeile="5" feld="Dorfverein Musterstadt" wert="120,00" eintragen="ja" gruppe="Zeile 5 — Spenden"/>
+      <posten zeile="5" feld="Summe" wert="370,00" eintragen="ja" gruppe="Zeile 5 — Spenden"/>
+      <posten zeile="12" feld="Freie Schule, August bis Dezember" wert="1.500,00" eintragen="ja" gruppe="Zeile 12 — Schulgeld"/>
+    </block>
+    <block name="Vorsorgeaufwand">
+      <posten zeile="46" feld="Haftpflichtversicherung" wert="94,00" eintragen="ja"/>
+    </block>
+    <block name="Anlage KAP">
+      <posten zeile="4" feld="Günstigerprüfung" wert="ja" eintragen="ja"/>
+      <posten zeile="7" feld="Kapitalerträge mit Steuerabzug" wert="100,00" eintragen="ja"/>
+      <posten zeile="37" feld="Kapitalertragsteuer" wert="25,00" eintragen="ja"/>
+      <posten zeile="38" feld="Solidaritätszuschlag" wert="1,37" eintragen="ja"/>
+    </block>
+    <block name="Anlage S">
+      <posten zeile="4" feld="Gewinn aus freiberuflicher Tätigkeit" wert="4.484,16" eintragen="ja"/>
+    </block>
+    <block name="Haushaltsnahe Aufwendungen">
+      <posten zeile="6" feld="Handwerkerleistung, Rechnungsbetrag" wert="433,68" eintragen="ja"/>
+      <posten zeile="9" feld="davon Lohnanteil" wert="287,00" eintragen="ja"/>
+    </block>
+  </formular>
+  <formular name="Anlage EÜR">
+    <block name="Betriebseinnahmen">
+      <posten zeile="14" feld="Umsatzsteuerfreie Umsätze" wert="4.800,00" eintragen="ja"/>
+      <posten zeile="18" feld="Vereinnahmte Umsatzsteuererstattung" wert="143,40" eintragen="ja"/>
+      <posten zeile="" feld="Summe" wert="4.943,40" eintragen="ja"/>
+    </block>
+    <block name="Betriebsausgaben">
+      <posten zeile="33" feld="Büroeinrichtung" wert="120,00" eintragen="ja" gruppe="Zeile 33 — Abschreibung"/>
+      <posten zeile="57" feld="Vorsteuer aus Rechnungen" wert="303,24" eintragen="ja" gruppe="Zeile 57 — Abziehbare Vorsteuer"/>
+      <posten zeile="60" feld="Hosting" wert="21,00" eintragen="ja" gruppe="Zeile 60 — Übrige Betriebsausgaben"/>
+      <posten zeile="60" feld="Kontoführung" wert="15,00" eintragen="ja" gruppe="Zeile 60 — Übrige Betriebsausgaben"/>
+      <posten zeile="60" feld="Summe" wert="36,00" eintragen="ja" gruppe="Zeile 60 — Übrige Betriebsausgaben"/>
+    </block>
+    <block name="Gewinnermittlung">
+      <posten zeile="76" feld="Summe Betriebseinnahmen" wert="4.943,40" eintragen="ja"/>
+      <posten zeile="77" feld="Summe Betriebsausgaben" wert="459,24" eintragen="ja"/>
+      <posten zeile="97" feld="Steuerpflichtiger Gewinn" wert="4.484,16" eintragen="ja"/>
+    </block>
+  </formular>
+</elster-uebergabe>

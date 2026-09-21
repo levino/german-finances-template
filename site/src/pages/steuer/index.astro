@@ -1,0 +1,78 @@
+---
+import Basis from '../../layouts/Basis.astro';
+import { jahre, erklaerung, belegeVon, offeneAufgaben } from '../../lib/daten';
+
+const zeilen = jahre.map((jahr) => {
+  const d = erklaerung[jahr];
+  const belege = belegeVon(jahr).length;
+  const aufgaben = offeneAufgaben(jahr).length;
+  return {
+    jahr,
+    hatMappe: Boolean(d),
+    belegt: d?.belegt ?? 0,
+    gesamt: d?.felder_gesamt ?? 0,
+    offen: d?.offen ?? 0,
+    vorlaeufig: d?.vorlaeufig ?? 0,
+    anteil: d && d.felder_gesamt > 0 ? Math.round((d.belegt / d.felder_gesamt) * 100) : 0,
+    verweise: [
+      d && { text: 'Formulare und Felder', href: `/steuer/${jahr}/` },
+      belege > 0 && { text: `${belege} Belege`, href: `/belege/#${jahr}` },
+    ].filter((v): v is { text: string; href: string } => Boolean(v)),
+    aufgaben,
+  };
+});
+---
+
+<Basis titel="Steuer" untertitel="Ein Veranlagungszeitraum je Kachel. Alle Jahre bleiben erreichbar.">
+  <p class="krumen" slot="krumen"><a href="/">Übersicht</a> · Steuer</p>
+
+  <div class="jahre">
+    {zeilen.map((z) => (
+      <div class="jahr">
+        <div class="kopf">
+          <span class="nummer">{z.jahr}</span>
+          {z.hatMappe ? (
+            <span class={z.offen + z.vorlaeufig === 0 ? 'ampel belegt' : 'ampel offen'}>
+              {z.offen + z.vorlaeufig === 0 ? 'vollständig belegt'
+                : z.offen > 0 ? `${z.offen} offen` : `${z.vorlaeufig} vorläufig`}
+            </span>
+          ) : <span class="ampel nicht-erklaeren">keine Arbeitsmappe</span>}
+        </div>
+        {z.hatMappe && (
+          <p class="fortschritt">
+            <strong>{z.belegt}</strong> von {z.gesamt} Feldern belegt
+            <span class="balken"><span style={`width:${z.anteil}%`}></span></span>
+          </p>
+        )}
+        {z.aufgaben > 0 && (
+          <p class="aufgaben">{z.aufgaben} offene Aufgabe{z.aufgaben > 1 ? 'n' : ''} in STAND.md</p>
+        )}
+        <p class="verweise">
+          {z.verweise.map((v, i) => (
+            <>
+              {i > 0 && <span class="trenner">·</span>}
+              <a href={v.href}>{v.text}</a>
+            </>
+          ))}
+        </p>
+      </div>
+    ))}
+  </div>
+</Basis>
+
+<style>
+  .jahre { display: grid; gap: 0.9rem; margin-top: 1rem; max-width: 44rem; }
+  .jahr { padding: 1rem 1.2rem; border: 1px solid var(--rand);
+    border-radius: var(--radius); background: var(--flaeche); }
+  .kopf { display: flex; align-items: baseline; gap: 0.8rem; }
+  .nummer { font-size: 1.25rem; font-weight: 650; }
+  .fortschritt { display: flex; align-items: center; gap: 0.8rem; margin: 0.45rem 0 0.4rem;
+    font-size: 0.9rem; color: var(--text-leise); }
+  .fortschritt strong { color: var(--text); font-size: 1.05rem; }
+  .balken { flex: 1 1 auto; max-width: 14rem; height: 6px; border-radius: 3px;
+    background: var(--flaeche-2); overflow: hidden; }
+  .balken > span { display: block; height: 100%; background: var(--gruen); }
+  .aufgaben { margin: 0 0 0.4rem; font-size: 0.85rem; color: var(--rot); }
+  .verweise { margin: 0; font-size: 0.85rem; }
+  .trenner { color: var(--text-sehr-leise); margin: 0 0.35rem; }
+</style>

@@ -1,0 +1,16 @@
+{
+  "name": "finanzen-cockpit",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "daten": "python3 scripts/generate-data.py --repo ..",
+    "dev": "astro dev",
+    "build": "astro build",
+    "alles": "npm run daten && npm run build",
+    "vorschau": "astro preview"
+  },
+  "devDependencies": {
+    "astro": "^5.0.0",
+    "typescript": "^5.6.0"
+  }
+}

@@ -1,0 +1,11 @@
+# Generierte Daten der Website
+site/src/data/
+site/public/belege/
+site/public/kontoauszuege/
+site/dist/
+node_modules/
+.venv/
+__pycache__/
+*.pyc
+.env
+.DS_Store

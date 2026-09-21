@@ -1,0 +1,71 @@
+# Baut das Cockpit-Image und pusht es in die Registry, danach setzt es den
+# Image-Tag im GitOps-Repo hoch. Erst das löst den Rollout aus — siehe
+# docs/deployment.md, Abschnitt "Die Falle: :latest rollt nie aus".
+#
+# Build-Kontext ist das Repo-Root, das Dockerfile liegt unter site/.
+name: build-site
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'site/**'
+      - 'ledger/**'
+      - 'belege/**'
+      - 'steuer/**'
+      - 'data/**'
+      - 'scripts/check_belege.json'
+      - '.forgejo/workflows/build-site.yml'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: docker
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Registry-Login
+        run: |
+          if [ -z "${{ secrets.REGISTRY_TOKEN }}" ]; then
+            echo "Secret REGISTRY_TOKEN fehlt"; exit 1
+          fi
+          echo "${{ secrets.REGISTRY_TOKEN }}" \
+            | docker login "${{ vars.REGISTRY }}" -u "${{ vars.REGISTRY_USER }}" --password-stdin
+
+      - name: Bauen und pushen
+        run: |
+          IMG="${{ vars.REGISTRY }}/${{ vars.IMAGE }}"
+          docker build \
+            --platform linux/amd64 \
+            --build-arg GIT_SHA="${{ github.sha }}" \
+            -f site/Dockerfile \
+            -t "$IMG:latest" -t "$IMG:${{ github.sha }}" \
+            .
+          docker push "$IMG:latest"
+          docker push "$IMG:${{ github.sha }}"
+
+      - name: Tag im GitOps-Repo hochsetzen
+        # Braucht INFRA_TOKEN mit Schreibrecht auf das GitOps-Repo. Fehlt es,
+        # bleibt der Lauf grün und der Tag muss von Hand gesetzt werden.
+        env:
+          INFRA_TOKEN: ${{ secrets.INFRA_TOKEN }}
+          INFRA_REPO: ${{ vars.INFRA_REPO }}
+          MANIFEST: ${{ vars.INFRA_MANIFEST }}
+          SHA: ${{ github.sha }}
+        run: |
+          if [ -z "$INFRA_TOKEN" ] || [ -z "$INFRA_REPO" ]; then
+            echo "Kein INFRA_TOKEN/INFRA_REPO — Tag $SHA von Hand setzen."
+            exit 0
+          fi
+          if ! command -v git >/dev/null; then
+            echo "git fehlt im Runner-Image — Tag $SHA von Hand setzen."
+            exit 0
+          fi
+          git clone --depth 1 "https://x-access-token:$INFRA_TOKEN@$INFRA_REPO" /tmp/infra
+          cd /tmp/infra
+          sed -i -E "s|(image: ${{ vars.REGISTRY }}/${{ vars.IMAGE }}):.*|\1:$SHA|" "$MANIFEST"
+          # Kein &&: unter "bash -e" würde Status 1 den Schritt abbrechen.
+          if git diff --quiet; then echo "Tag ist schon aktuell"; exit 0; fi
+          git config user.name "cockpit-ci"
+          git config user.email "cockpit-ci@example.invalid"
+          git commit -am "cockpit: Image auf $SHA"
+          git push

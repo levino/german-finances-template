@@ -1,0 +1,93 @@
+---
+import Basis from '../../../../layouts/Basis.astro';
+import { erklaerung, STATUS_TEXT, formatDatum } from '../../../../lib/daten';
+
+export function getStaticPaths() {
+  return Object.entries(erklaerung).flatMap(([jahr, daten]) =>
+    daten.dokumente.map((dok) => ({ params: { jahr, dok: dok.id } })));
+}
+
+const { jahr, dok } = Astro.params as { jahr: string; dok: string };
+const formular = erklaerung[jahr]!.dokumente.find((f) => f.id === dok)!;
+---
+
+<Basis titel={`${formular.titel} ${jahr}`}
+       untertitel="Die Ausfüllvorlage: Zeile, Feld, Wert, Status."
+       pfad={`/steuer/${jahr}/${dok}/`}>
+  <p class="krumen" slot="krumen">
+    <a href="/">Übersicht</a> · <a href="/steuer/">Steuer</a> ·
+    <a href={`/steuer/${jahr}/`}>{jahr}</a> · {formular.titel}
+  </p>
+
+  {formular.bloecke.map((block) => (
+    <section class="block">
+      <h2>{block.titel}</h2>
+      {block.gruppen.map((gruppe) => (
+        <>
+          {gruppe.titel && <h3>{gruppe.titel}</h3>}
+          <div class="tabellenrahmen">
+            <table>
+              <thead>
+                <tr>
+                  <th>Zeile</th><th>Feld</th><th class="zahl">Wert</th>
+                  <th>Status</th><th>Quelle</th>
+                </tr>
+              </thead>
+              <tbody>
+                {gruppe.felder.map((f) => (
+                  <tr>
+                    <td class="zahl">{f.zeile || '—'}</td>
+                    <td>{f.summe ? <strong>{f.feld}</strong> : f.feld}</td>
+                    <td class="zahl">{f.summe ? <strong>{f.wert}</strong> : f.wert}</td>
+                    <td><span class={`ampel ${f.status}`}>{STATUS_TEXT[f.status]}</span></td>
+                    <td class="quelle">
+                      {f.quelle}
+                      {f.quelle_belege.map((pfad) => (
+                        <a class="beleg" href={`/${pfad}`}>Beleg</a>
+                      ))}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          {gruppe.felder.filter((f) => f.herleitung.length > 0).map((f) => (
+            <details>
+              <summary>Herleitung: {f.feld} ({f.herleitung.length} Buchungen)</summary>
+              <div class="tabellenrahmen">
+                <table>
+                  <thead>
+                    <tr><th>Datum</th><th>Empfänger</th><th>Konto</th><th class="zahl">Betrag</th><th>Beleg</th></tr>
+                  </thead>
+                  <tbody>
+                    {f.herleitung.map((b) => (
+                      <tr>
+                        <td>{formatDatum(b.datum)}</td>
+                        <td>{b.payee || b.narration}</td>
+                        <td class="konto">{b.konto}</td>
+                        <td class="zahl">{b.betrag}</td>
+                        <td>{b.belege.length > 0 ? 'ja' : <span class="ampel offen">fehlt</span>}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </details>
+          ))}
+        </>
+      ))}
+    </section>
+  ))}
+</Basis>
+
+<style>
+  .block { margin-top: 2rem; }
+  .block h2 { font-size: 1.1rem; margin-bottom: 0.5rem; }
+  .block h3 { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em;
+    color: var(--text-sehr-leise); margin: 1.2rem 0 0.4rem; }
+  .quelle { font-size: 0.8rem; color: var(--text-leise); }
+  .beleg { margin-left: 0.4rem; white-space: nowrap; }
+  .konto { font-size: 0.8rem; color: var(--text-leise); }
+  details { margin: 0.6rem 0 0; font-size: 0.85rem; }
+  summary { cursor: pointer; color: var(--text-leise); padding: 0.3rem 0; }
+</style>

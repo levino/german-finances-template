@@ -1,0 +1,62 @@
+---
+import '../styles/global.css';
+import { formulareVon } from '../lib/daten';
+
+interface Props { titel: string; untertitel?: string; pfad?: string; }
+const { titel, untertitel, pfad = Astro.url.pathname } = Astro.props;
+
+// Das Jahr steht im Pfad. Ohne Jahr keine Jahresnavigation — es gibt bewusst
+// kein "aktuelles Jahr".
+const jahr = pfad.match(/^\/steuer\/(\d{4})\//)?.[1] ?? '';
+const aktiv = (ziel: string) => (pfad.startsWith(ziel) ? 'page' : undefined);
+
+const bereiche = [
+  { href: '/', titel: 'Übersicht', exakt: true },
+  { href: '/steuer/', titel: 'Steuer' },
+  { href: '/belege/', titel: 'Belege' },
+];
+---
+
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>{titel === 'Finanzen' ? titel : `${titel} · Finanzen`}</title>
+  </head>
+  <body>
+    <div class="huelle">
+      <nav class="seitenleiste" aria-label="Hauptnavigation">
+        <a class="marke" href="/">Finanzen<span>Buchführung und Steuerakte</span></a>
+        <ul>
+          {bereiche.map((b) => (
+            <li>
+              <a href={b.href}
+                 aria-current={b.exakt
+                   ? (pfad === '/' ? 'page' : undefined)
+                   : aktiv(b.href)}>{b.titel}</a>
+            </li>
+          ))}
+        </ul>
+        {jahr && (
+          <ul>
+            {formulareVon(jahr).map((f) => (
+              <li>
+                <a href={`/steuer/${jahr}/${f.id}/`}
+                   aria-current={aktiv(`/steuer/${jahr}/${f.id}/`)}>{f.titel}</a>
+              </li>
+            ))}
+          </ul>
+        )}
+      </nav>
+
+      <main class="inhalt">
+        <slot name="krumen" />
+        <h1>{titel}</h1>
+        {untertitel && <p class="untertitel">{untertitel}</p>}
+        <slot />
+      </main>
+    </div>
+  </body>
+</html>

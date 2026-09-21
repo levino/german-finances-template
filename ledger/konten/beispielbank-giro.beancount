@@ -1,0 +1,72 @@
+; Girokonto. Erzeugt aus dem Kontoauszug-Export, danach von Hand kategorisiert.
+; Jede belegpflichtige Buchung trägt document: (Rechnung) oder statement:
+; (Kontoauszug, nur wo die Gegenseite die Zahlung kennt).
+
+2025-01-01 * "Anfangsbestand"
+  Assets:Bank:Beispielbank:Giro   4200.00 EUR
+  Equity:Anfangsbestand          -4200.00 EUR
+
+; --- Betrieb: Einnahme aus einer Ausgangsrechnung ---------------------------
+; Leistungsort Singapur, keine deutsche Umsatzsteuer (§ 3a Abs. 2 UStG).
+2025-02-12 * "Nordlicht Labs Pte. Ltd." "Honorar RE2025020001"
+  document: "belege/ausgangsrechnungen/2025/2025-02-01.RE2025020001.nordlicht-labs.pdf"
+  invoice: "RE2025020001"
+  Assets:Bank:Geschaeftskonto:Giro   4800.00 EUR
+  Income:Betrieb:Honorare           -4800.00 EUR
+
+; --- Betriebsausgabe: netto plus Vorsteuer ---------------------------------
+2025-03-04 * "Musterhoster GmbH" "Serverkosten Februar"
+  document: "belege/2025/2025-03-01.musterhoster-server-februar.pdf"
+  Expenses:Tech:Hosting               21.00 EUR
+  Expenses:Betrieb:Vorsteuer           3.99 EUR
+  Assets:Bank:Geschaeftskonto:Giro   -24.99 EUR
+
+2025-03-31 * "Beispielbank" "Kontoführung 1. Quartal"
+  statement: "data/raw/beispielbank/2025-03-31.kontoauszug.pdf"
+  Expenses:Betrieb:Kontofuehrung      15.00 EUR
+  Expenses:Betrieb:Vorsteuer           2.85 EUR
+  Assets:Bank:Geschaeftskonto:Giro   -17.85 EUR
+
+; Umsatzsteuererstattung des Finanzamts: eigene Einnahmeart, kein Honorar.
+2025-04-15 * "Finanzamt Musterstadt" "Erstattung Umsatzsteuer 2024"
+  statement: "data/raw/beispielbank/2025-04-30.kontoauszug.pdf"
+  Assets:Bank:Geschaeftskonto:Giro       143.40 EUR
+  Income:Betrieb:Umsatzsteuererstattung -143.40 EUR
+
+; --- Interner Transfer: nur EINE Buchung, auf der ausgehenden Seite --------
+2025-04-20 * "Übertrag" "Geschäftskonto auf privat"
+  Assets:Bank:Geschaeftskonto:Giro  -2000.00 EUR
+  Assets:Bank:Beispielbank:Giro      2000.00 EUR
+
+; --- Sonderausgaben --------------------------------------------------------
+2025-05-06 * "Musterhilfe e.V." "Spende"
+  document: "belege/2025/2026-01-20.zuwendungsbestaetigung-musterhilfe-2025.pdf"
+  Expenses:Spenden                 250.00 EUR
+  Assets:Bank:Beispielbank:Giro   -250.00 EUR
+
+; Unter 300 € genügt der vereinfachte Nachweis (§ 50 Abs. 4 EStDV): der
+; Kontoauszug zusammen mit dem Beleg des Empfängers.
+2025-06-14 * "Dorfverein Musterstadt" "Spende"
+  statement: "data/raw/beispielbank/2025-06-30.kontoauszug.pdf"
+  Expenses:Spenden                 120.00 EUR
+  Assets:Bank:Beispielbank:Giro   -120.00 EUR
+
+2025-07-01 * "Freie Schule Musterstadt" "Schulgeld Nala, Aug bis Dez"
+  document: "belege/2025/2026-02-10.schulgeldbestaetigung-2025.pdf"
+  Expenses:Kinder:Schulgeld       1500.00 EUR
+  Assets:Bank:Beispielbank:Giro  -1500.00 EUR
+
+2025-07-20 * "Musterversicherung" "Haftpflicht Jahresbeitrag"
+  document: "belege/2025/2025-07-15.musterversicherung-haftpflicht-2025.pdf"
+  Expenses:Versicherungen:Haftpflicht   94.00 EUR
+  Assets:Bank:Beispielbank:Giro        -94.00 EUR
+
+; --- Haushaltsnahe Handwerkerleistung -------------------------------------
+; Nur der Lohnanteil ist begünstigt; er muss auf der Rechnung getrennt stehen.
+; Barzahlung wäre schädlich, deshalb immer überweisen.
+2025-09-08 * "Dachdeckerei Muster" "Dachreparatur"
+  document: "belege/2025/2025-09-01.dachdeckerei-muster-dachreparatur.pdf"
+  Expenses:Haushaltsnah:Handwerker   433.68 EUR
+  Assets:Bank:Beispielbank:Giro     -433.68 EUR
+
+2025-12-31 balance Assets:Bank:Beispielbank:Giro   3802.32 EUR

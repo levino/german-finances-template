@@ -1,0 +1,30 @@
+{
+  "_hinweis": "Konten, deren Buchungen einen Beleg brauchen. Präfixvergleich.",
+  "belegpflichtig": [
+    "Expenses:Betrieb",
+    "Expenses:Tech",
+    "Expenses:Spenden",
+    "Expenses:Parteibeitraege",
+    "Expenses:Versicherungen",
+    "Expenses:Kinder:Schulgeld",
+    "Expenses:Haushaltsnah",
+    "Income:Betrieb",
+    "Income:Kapitalertraege"
+  ],
+
+  "_statement_genuegt": "Hier genügt der Kontoauszug, weil die Gegenseite die Zahlung kennt und der Auszug selbst die Bemessungsgrundlage ausweist (Entgelte mit Umsatzsteuer).",
+  "statement_genuegt": [
+    "Expenses:Betrieb:Kontofuehrung",
+    "Expenses:Betrieb:Vorsteuer",
+    "Income:Betrieb:Umsatzsteuererstattung"
+  ],
+
+  "_ausnahmen": "Einzelfälle, die bewusst ohne eigenen Beleg bleiben. Ohne Grund keine Ausnahme — der Grund landet auch in der Arbeitsmappe.",
+  "ausnahmen": [
+    {
+      "datum": "2025-06-14",
+      "konto": "Expenses:Spenden",
+      "grund": "vereinfachter Nachweis nach § 50 Abs. 4 EStDV, Zuwendung unter 300 EUR"
+    }
+  ]
+}
