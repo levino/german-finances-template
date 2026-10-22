@@ -1,7 +1,7 @@
 # Zwei Stufen: Python erzeugt die Daten aus dem Ledger, Node baut die Seiten.
 # Build-Kontext ist das Repo-Root (der Punkt am Ende von docker build).
 
-FROM python:3.12-slim AS daten
+FROM python:3.15-slim@sha256:044d5bd747976e21f8bc4d746c3479b19a84bb8ae6261b802acdd26b29036c93 AS daten
 RUN pip install --no-cache-dir beancount==3.2.3
 WORKDIR /repo
 COPY ledger/ ./ledger/
