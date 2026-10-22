@@ -21,7 +21,7 @@ COPY --from=daten /repo/site/src/data/ ./src/data/
 COPY --from=daten /repo/site/public/ ./public/
 RUN npm run build
 
-FROM nginx:1.27-alpine
+FROM nginx:1.31-alpine@sha256:060849a174666c53439dc7cecbf8f67e225c7cbfb1a44ca97915d9a172a81e6d
 COPY --from=bau /app/dist/ /usr/share/nginx/html/
 # Datenstand und Commit ablegen, damit von außen prüfbar ist, was läuft.
 COPY --from=daten /repo/site/src/data/meta.json /usr/share/nginx/html/version.json
